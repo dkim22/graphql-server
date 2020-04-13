@@ -2,9 +2,9 @@
    "type": "postgres",
    "host": "localhost",
    "port": 5432,
-   "username": "test",
-   "password": "test",
-   "database": "test",
+   "username": "postgres",
+   "password": "123123123",
+   "database": "graphql-ts-server-boilerplate",
    "synchronize": true,
    "logging": false,
    "entities": [
