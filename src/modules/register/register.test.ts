@@ -1,8 +1,7 @@
 import { request } from "graphql-request";
 import { AddressInfo } from "net";
-
-import { User } from "../entity/User";
-import { startServer } from "../startServer";
+import { startServer } from "../../startServer";
+import { User } from "../../entity/User";
 
 let getHost = () => "";
 
