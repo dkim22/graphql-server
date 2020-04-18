@@ -1,6 +1,4 @@
 import { request } from "graphql-request";
-import { AddressInfo } from "net";
-import { startServer } from "../../startServer";
 import { User } from "../../entity/User";
 import {
   duplicateEmail,
@@ -8,14 +6,7 @@ import {
   invalidEmail,
   passwordNotLongEnough,
 } from "./errorMessages";
-
-let getHost = () => "";
-
-beforeAll(async () => {
-  const app = await startServer();
-  const { port } = app.address() as AddressInfo;
-  getHost = () => `http://127.0.0.1:${port}`;
-});
+import { createTypeormConn } from "../../utils/createTypeormConn";
 
 const email = "kim@kim.com";
 const password = "agagag";
@@ -29,9 +20,16 @@ const mutation = (e: string, p: string) => `
   }
 `;
 
-describe("Register user", async () => {
+beforeAll(async () => {
+  await createTypeormConn();
+});
+
+describe("Register user", () => {
   it("check for duplicate email", async () => {
-    const response = await request(getHost(), mutation(email, password));
+    const response = await request(
+      process.env.TEST_HOST as string,
+      mutation(email, password)
+    );
     expect(response).toEqual({ register: null });
     const users = await User.find({ where: { email } });
     expect(users).toHaveLength(1);
@@ -41,7 +39,10 @@ describe("Register user", async () => {
     expect(user.password).not.toEqual(password);
 
     // 중복된 이메일인지 테스트
-    const response2 = await request(getHost(), mutation(email, password));
+    const response2 = await request(
+      process.env.TEST_HOST as string,
+      mutation(email, password)
+    );
     expect(response2.register).toHaveLength(1);
     expect(response2.register[0]).toEqual({
       path: "email",
@@ -50,7 +51,10 @@ describe("Register user", async () => {
   });
 
   it("check bad email", async () => {
-    const response3 = await request(getHost(), mutation("b", password));
+    const response3 = await request(
+      process.env.TEST_HOST as string,
+      mutation("b", password)
+    );
     expect(response3).toEqual({
       register: [
         {
@@ -66,7 +70,10 @@ describe("Register user", async () => {
   });
 
   it("check bad password", async () => {
-    const response4 = await request(getHost(), mutation(email, "ad"));
+    const response4 = await request(
+      process.env.TEST_HOST as string,
+      mutation(email, "ad")
+    );
     expect(response4).toEqual({
       register: [
         {
@@ -78,7 +85,10 @@ describe("Register user", async () => {
   });
 
   it("check bad password and bad email", async () => {
-    const response5 = await request(getHost(), mutation("df", "ad"));
+    const response5 = await request(
+      process.env.TEST_HOST as string,
+      mutation("df", "ad")
+    );
     expect(response5).toEqual({
       register: [
         {
