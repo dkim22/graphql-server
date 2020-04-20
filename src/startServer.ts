@@ -1,3 +1,5 @@
+import "reflect-metadata";
+import "dotenv/config";
 import { GraphQLServer } from "graphql-yoga";
 import * as session from "express-session";
 import * as connectRedis from "connect-redis";
@@ -7,8 +9,6 @@ import { redis } from "./redis";
 import { confirmEmail } from "./routes/confirmEmail";
 import { genSchema } from "./utils/genSchema";
 
-// TODO: Go to .env
-const SESSION_SECRET = "asdasd";
 const RedisStore = connectRedis(session);
 
 export const startServer = async () => {
@@ -27,7 +27,7 @@ export const startServer = async () => {
         client: redis as any
       }),
       name: "qid",
-      secret: SESSION_SECRET,
+      secret: process.env.SESSION_SECRET as string,
       resave: false,
       saveUninitialized: false,
       cookie: {
