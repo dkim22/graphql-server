@@ -47,11 +47,12 @@ export const resolvers: ResolverMap = {
           }
         ];
       }
-
-      const valid = await bcrypt.compare(password, user.password);
-
-      if (!valid) {
-        return errorResponse;
+      if (user.password) {
+        const valid = await bcrypt.compare(password, user.password);
+  
+        if (!valid) {
+          return errorResponse;
+        }
       }
 
       // login successful
