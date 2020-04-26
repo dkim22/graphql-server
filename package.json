@@ -37,12 +37,11 @@
     "bcryptjs": "^2.4.3",
     "connect-redis": "^4.0.4",
     "dotenv": "^8.2.0",
+    "express": "^4.17.1",
     "express-rate-limit": "^5.1.1",
     "express-session": "^1.17.1",
     "faker": "^4.1.0",
     "glob": "^7.1.6",
-    "graphql-import": "^1.0.2",
-    "graphql-request": "^1.8.2",
     "graphql-tools": "^5.0.0",
     "graphql-yoga": "^1.18.3",
     "ioredis": "^4.16.2",
@@ -62,6 +61,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon --exec ts-node src/index.ts",
     "test": "cross-env NODE_ENV=test jest --forceExit",
+    "lint": "tslint src/**/*.ts",
     "gen-schema-types": "ts-node src/scripts/createTypes.ts"
   },
   "jest": {

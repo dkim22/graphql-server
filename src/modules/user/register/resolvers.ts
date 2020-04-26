@@ -11,7 +11,7 @@ import {
 } from "./errorMessages";
 import { registerPasswordValidation } from "../../../yupSchemas";
 // import { createConfirmEmailLink } from "./createConfirmEmailLink";
-// import { sendEmail } from "../../utils/sendEmail";
+// import { sendEmail } from "../../../utils/sendEmail";
 
 const schema = yup.object().shape({
   email: yup.string().min(3, emailNotLongEnough).max(255).email(invalidEmail),
