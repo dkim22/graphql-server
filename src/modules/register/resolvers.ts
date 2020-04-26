@@ -10,7 +10,7 @@ import {
   invalidEmail,
 } from "./errorMessages";
 import { registerPasswordValidation } from "../../yupSchemas";
-// import { createConfirmEmailLink } from "../../utils/createConfirmEmailLink";
+// import { createConfirmEmailLink } from "./createConfirmEmailLink";
 // import { sendEmail } from "../../utils/sendEmail";
 
 const schema = yup.object().shape({

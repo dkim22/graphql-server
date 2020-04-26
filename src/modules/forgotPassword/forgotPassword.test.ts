@@ -1,6 +1,7 @@
-import * as Redis from "ioredis";
 import { Connection } from "typeorm";
-import { createTypeormConn } from "../../utils/createTypeormConn";
+import * as Redis from "ioredis";
+import * as faker from "faker";
+
 import { User } from "../../entity/User";
 import { TestClient } from "../../utils/TestClient";
 import { createForgotPasswordLink } from "../../utils/createForgotPasswordLink";
@@ -8,16 +9,17 @@ import { forgotPasswordLockAccount } from "../../utils/forgotPasswordLockAccount
 import { forgotPasswordLockedError } from "../login/errorMessages";
 import { passwordNotLongEnough } from "../register/errorMessages";
 import { expiredKeyError } from "./errorMessages";
+import { createTestConn } from "../../testUtils/createTestConn";
 
 let conn: Connection;
 const redis = new Redis();
-const email = "kim3@kim.com";
-const password = "asdasdasd11";
-const newPassword = "sdgdfgs";
+const email = faker.internet.email();
+const password = faker.internet.password();
+const newPassword = faker.internet.password();
 
 let userId: string;
 beforeAll(async () => {
-  conn = await createTypeormConn();
+  conn = await createTestConn();
   const user = await User.create({
     email,
     password,
@@ -72,7 +74,7 @@ describe("forgot password", () => {
     });
 
     // make sure redis key expires after password change
-    expect(await client.forgotPasswordChange("asdfasdfasdf", key)).toEqual({
+    expect(await client.forgotPasswordChange(faker.internet.password(), key)).toEqual({
       data: {
         forgotPasswordChange: [
           {
