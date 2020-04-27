@@ -1,17 +1,17 @@
-/// <reference path="../../types/schema.d.ts"/>
+/// <reference path="../../../types/schema.d.ts"/>
 
 import * as yup from "yup";
-import { ResolverMap } from "../../types/graphql-utils";
-import { User } from "../../entity/User";
-import { formatYupError } from "../../utils/formatYupError";
+import { ResolverMap } from "../../../types/graphql-utils";
+import { User } from "../../../entity/User";
+import { formatYupError } from "../../../utils/formatYupError";
 import {
   duplicateEmail,
   emailNotLongEnough,
   invalidEmail,
 } from "./errorMessages";
-import { registerPasswordValidation } from "../../yupSchemas";
-// import { createConfirmEmailLink } from "../../utils/createConfirmEmailLink";
-// import { sendEmail } from "../../utils/sendEmail";
+import { registerPasswordValidation } from "../../../yupSchemas";
+// import { createConfirmEmailLink } from "./createConfirmEmailLink";
+// import { sendEmail } from "../../../utils/sendEmail";
 
 const schema = yup.object().shape({
   email: yup.string().min(3, emailNotLongEnough).max(255).email(invalidEmail),
@@ -19,9 +19,6 @@ const schema = yup.object().shape({
 });
 
 export const resolvers: ResolverMap = {
-  Query: {
-    bye: () => "bye",
-  },
   Mutation: {
     register: async (
       _,

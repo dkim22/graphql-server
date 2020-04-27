@@ -14,10 +14,16 @@ import { confirmEmail } from "./routes/confirmEmail";
 import { genSchema } from "./utils/genSchema";
 import { redisSessionPrefix } from "./constants";
 import { User } from "./entity/User";
+import { createTestConn } from "./testUtils/createTestConn";
 
 const RedisStore = connectRedis(session);
 
 export const startServer = async () => {
+  // TODO: 테스트 할 때 레디스 초기화 필요
+  // if (process.env.NODE_ENV === "test") {
+  //   await redis.flushall();
+  // }
+  
   const server = new GraphQLServer({
     schema: genSchema(),
     context: ({ request }) => ({
@@ -65,7 +71,9 @@ export const startServer = async () => {
 
   server.express.get("/confirm/:id", confirmEmail);
 
-  const connection = await createTypeormConn();
+  const connection = process.env.NODE_ENV === "test" 
+    ? await createTestConn(true)
+    : await createTypeormConn();
 
   passport.use(
     new Strategy(

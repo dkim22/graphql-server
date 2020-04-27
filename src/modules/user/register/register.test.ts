@@ -1,20 +1,24 @@
-import { User } from "../../entity/User";
+import { Connection } from "typeorm";
+import * as faker from "faker";
+
+import { User } from "../../../entity/User";
 import {
   duplicateEmail,
   emailNotLongEnough,
   invalidEmail,
   passwordNotLongEnough,
 } from "./errorMessages";
-import { createTypeormConn } from "../../utils/createTypeormConn";
-import { Connection } from "typeorm";
-import { TestClient } from "../../utils/TestClient";
+import { TestClient } from "../../../utils/TestClient";
+import { createTestConn } from "../../../testUtils/createTestConn";
 
-const email = "kim@kim.com";
-const password = "agagag";
+faker.seed(Date.now() + 5);
+const email = faker.internet.email();
+const password = faker.internet.password();
+const client = new TestClient(process.env.TEST_HOST as string);
 
 let conn: Connection;
 beforeAll(async () => {
-  conn = await createTypeormConn();
+  conn = await createTestConn();
 });
 afterAll(async () => {
   conn.close();
@@ -22,7 +26,6 @@ afterAll(async () => {
 
 describe("Register user", () => {
   it("check for duplicate email", async () => {
-    const client = new TestClient(process.env.TEST_HOST as string);
     const response = await client.register(email, password);
     expect(response.data).toEqual({ register: null });
     const users = await User.find({ where: { email } });
@@ -42,7 +45,6 @@ describe("Register user", () => {
   });
 
   it("check bad email", async () => {
-    const client = new TestClient(process.env.TEST_HOST as string);
     const response3 = await client.register("b", password);
     expect(response3.data).toEqual({
       register: [
@@ -59,8 +61,7 @@ describe("Register user", () => {
   });
 
   it("check bad password", async () => {
-    const client = new TestClient(process.env.TEST_HOST as string);
-    const response4 = await client.register(email, "ad");
+    const response4 = await client.register(faker.internet.email(), "ad");
     expect(response4.data).toEqual({
       register: [
         {
@@ -72,7 +73,6 @@ describe("Register user", () => {
   });
 
   it("check bad password and bad email", async () => {
-    const client = new TestClient(process.env.TEST_HOST as string);
     const response5 = await client.register("df", "ad");
     expect(response5.data).toEqual({
       register: [
