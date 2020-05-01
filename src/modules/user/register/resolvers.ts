@@ -14,7 +14,12 @@ import { registerPasswordValidation } from "../../../yupSchemas";
 // import { sendEmail } from "../../../utils/sendEmail";
 
 const schema = yup.object().shape({
-  email: yup.string().min(3, emailNotLongEnough).max(255).email(invalidEmail),
+  email: yup
+    .string()
+    .min(3, emailNotLongEnough)
+    .max(255)
+    .email(invalidEmail)
+    .required(),
   password: registerPasswordValidation,
 });
 
@@ -22,7 +27,7 @@ export const resolvers: ResolverMap = {
   Mutation: {
     register: async (
       _,
-      args: GQL.IRegisterOnMutationArguments,
+      args: GQL.IRegisterOnMutationArguments
       // { redis, url }
     ) => {
       try {
